@@ -8,9 +8,10 @@
 # link = input("Enter the YouTube video URL: ")
 # Download(link)
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog, QComboBox, QLabel, QHBoxLayout, QLineEdit
 from SupportedFileTypes import *
 from VideoConversion import Convert
+from YoutubeDownload import Download
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog, QComboBox, QLabel, QHBoxLayout, QLineEdit, QTabWidget
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -19,35 +20,84 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("File Converter")
         self.setGeometry(100, 100, 400, 300)
         
-        layout = QVBoxLayout()
-
+        # Create a tab widget
+        self.tabs = QTabWidget()
+        
+        #--------- File Conversion Tab------------------
+        self.tab1 = QWidget()
+        self.tabs.addTab(self.tab1, "File Converter")
+        
+        
+        
+        # Set up the layout for the first tab
+        self.tab1_layout = QVBoxLayout()
+        self.tab1.setLayout(self.tab1_layout)
+        
         # -----FromBox-----------
         self.label = QLabel('From')
-        layout.addWidget(self.label)
-
+        self.tab1_layout.addWidget(self.label)
 
         fromBox = self.create_from_box()
-        layout.addLayout(fromBox)
-
+        self.tab1_layout.addLayout(fromBox)
 
         #---------To Box--------------
         self.label = QLabel('To')
-        layout.addWidget(self.label)
-
+        self.tab1_layout.addWidget(self.label)
 
         toBox = self.create_to_box()
-        layout.addLayout(toBox)
+        self.tab1_layout.addLayout(toBox)
 
-        ToBox = QHBoxLayout()
-
-         # Add Convert Button
+        # Add Convert Button
         self.convertButton = QPushButton("Convert")
         self.convertButton.clicked.connect(self.convert_file)
-        layout.addWidget(self.convertButton)        
+        self.tab1_layout.addWidget(self.convertButton)
+        
 
-        # Central widget
+        #------- Youtube Download Tab-----------
+
+        #create the tab
+        self.tab2 = QWidget()
+        self.tabs.addTab(self.tab2, "Youtube Download")
+
+
+
+        # Set up the layout for the second tab
+        self.tab2_layout = QVBoxLayout()
+        self.tab2.setLayout(self.tab2_layout)
+        
+        # Add widgets to the second tab as needed
+
+        
+
+        
+        #add a link input box
+        self.linkLabel = QLabel("Type link of video to download:")
+        self.tab2_layout.addWidget(self.linkLabel)
+
+        self.linkInput = QLineEdit()
+        self.tab2_layout.addWidget(self.linkInput)
+
+        #add a download location input
+        self.downloadLabel = QLabel("Where should the file download to:")
+        self.tab2_layout.addWidget(self.downloadLabel)
+
+        self.downloadLocation = QLineEdit()
+        self.tab2_layout.addWidget(self.downloadLocation)
+
+
+        # Add a download button to the second tab
+        self.downloadButton = QPushButton("Download")
+        self.downloadButton.clicked.connect(self.download_video)
+        self.tab2_layout.addWidget(self.downloadButton)
+        
+
+
+
+        #--------Central widget-----------
         central_widget = QWidget()
-        central_widget.setLayout(layout)
+        central_layout = QVBoxLayout()
+        central_layout.addWidget(self.tabs)
+        central_widget.setLayout(central_layout)
         self.setCentralWidget(central_widget)
 
     def create_from_box(self):
@@ -59,7 +109,7 @@ class MainWindow(QMainWindow):
         self.FromFileButton.setFixedSize(64, 64)
         fromBox.addWidget(self.FromFileButton)
 
-        #Textbox for file path selection
+        # Textbox for file path selection
         self.fromFilePath = QLineEdit()
         fromBox.addWidget(self.fromFilePath)
 
@@ -77,13 +127,6 @@ class MainWindow(QMainWindow):
         # Textbox to display selected file path
         self.toFilePath = QLineEdit()
         toBox.addWidget(self.toFilePath)
-
-        #dropdown of available conversion types
-        self.dropdown = QComboBox()
-        self.dropdown.addItems(SupportedFileTypes)
-        toBox.addWidget(self.dropdown)
-
-        
 
         return toBox
 
@@ -106,7 +149,14 @@ class MainWindow(QMainWindow):
         output_file = self.toFilePath.text()
         Convert(input_file, output_file)
         print(f"Converted {input_file} to {output_file} as {conversion_type}")
+    
+    def download_video(self):
+        link = self.linkInput.text()
+        Download(link)
 
+
+
+# Example usage
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
