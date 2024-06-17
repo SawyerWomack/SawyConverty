@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.tab1_layout.addLayout(fromBox)
 
         #---------To Box--------------
-        self.label = QLabel('To')
+        self.label = QLabel('To (be sure to add the extension you want to change the file to at the end)')
         self.tab1_layout.addWidget(self.label)
 
         toBox = self.create_to_box()
