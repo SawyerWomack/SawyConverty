@@ -12,6 +12,7 @@ from SupportedFileTypes import *
 from VideoConversion import Convert
 from YoutubeDownload import Download
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog, QComboBox, QLabel, QHBoxLayout, QLineEdit, QTabWidget
+from PyQt5.QtGui import QMovie, QIcon
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -47,10 +48,17 @@ class MainWindow(QMainWindow):
         toBox = self.create_to_box()
         self.tab1_layout.addLayout(toBox)
 
-        # Add Convert Button
+        #--------Convert Widgets---------
         self.convertButton = QPushButton("Convert")
         self.convertButton.clicked.connect(self.convert_file)
         self.tab1_layout.addWidget(self.convertButton)
+
+        self.spinnerLabel = QLabel()
+        self.spinner = QMovie("/home/wiffle/Desktop/File Converter/spinner.gif")
+        self.spinnerLabel.setMovie(self.spinner)
+
+        self.tab1_layout.addWidget(self.spinnerLabel)
+        self.convertButton.setIcon(QIcon())
         
 
         #------- Youtube Download Tab-----------
@@ -147,12 +155,21 @@ class MainWindow(QMainWindow):
     def convert_file(self):
         input_file = self.fromFilePath.text()
         output_file = self.toFilePath.text()
-        Convert(input_file, output_file)
-        print(f"Converted {input_file} to {output_file} as {conversion_type}")
+        
+        
+        self.convertButton.setText("Converting...")
     
+        Convert(input_file, output_file)
+
+        self.convertButton.setText("Converted!")
+    
+
+
+                
     def download_video(self):
         link = self.linkInput.text()
-        Download(link)
+        location = self.downloadLocation.text()
+        Download(link,location)
 
 
 

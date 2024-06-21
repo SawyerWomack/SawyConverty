@@ -9,6 +9,8 @@ def FindDownloadDir():
     return home
 
 def Download(link,location=FindDownloadDir()):
+    if location=="":
+        location=FindDownloadDir()
     youtubeObject = YouTube(link)
     youtubeObject = youtubeObject.streams.get_highest_resolution()
     try:

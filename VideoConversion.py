@@ -3,10 +3,16 @@ from SupportedFileTypes import *
 #Uses ffmpeg to convert between video formats
 
 def Convert(inputFile, outputFile):
+
     inputExtension = GetExtension(inputFile)
     outputExtension = GetExtension(outputFile)
-    
 
+
+    inputFile = "\'" + inputFile+"\'"
+    outputFile = "\'" + outputFile+"\'"
+    
+    
+    
     #check if input file extension is good
     if(SupportedFileTypes.count(inputExtension) == 0):
         print("input no good")
@@ -23,7 +29,7 @@ def Convert(inputFile, outputFile):
 
     print(inputExtension + " " + outputExtension)
 
-    os.system("ffmpeg -i " + inputFile + " "+ outputFile+ " -hide_banner")
+    return os.system("ffmpeg -i " + inputFile + " "+ outputFile+ " -hide_banner")
 
 def GetExtension(file: str):
     length = len(file)
@@ -45,7 +51,4 @@ def ReverseString(String: str):
         index -= 1
 
     return output
-
-
-
 
