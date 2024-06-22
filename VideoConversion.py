@@ -1,5 +1,7 @@
+import subprocess
 import os
 from SupportedFileTypes import *
+from UIModules import ErrorMessage
 #Uses ffmpeg to convert between video formats
 
 def Convert(inputFile, outputFile):
@@ -7,15 +9,17 @@ def Convert(inputFile, outputFile):
     inputExtension = GetExtension(inputFile)
     outputExtension = GetExtension(outputFile)
 
+    inputFile = inputFile
+    #inputFile = "\'" + inputFile+"\'"
+    #outputFile = "\'" + outputFile+"\'"
 
-    inputFile = "\'" + inputFile+"\'"
-    outputFile = "\'" + outputFile+"\'"
+    outputFile = outputFile
     
     
     
     #check if input file extension is good
     if(SupportedFileTypes.count(inputExtension) == 0):
-        print("input no good")
+        ErrorMessage("Input file extension is not supported")
         return
 
     #check if output file extension is good
@@ -24,12 +28,41 @@ def Convert(inputFile, outputFile):
         return
     #check if they do not have the same file extension
     if(inputExtension == outputExtension):
-        print("please change the output extension the the desired format")
+        ErrorMessage("please change the output extension the the desired format")
         return
+    
+    if(os.path.isfile(inputFile) == False):
+        ErrorMessage("input file does not exist")
+        return
+    
+    if(os.path.isfile(outputFile) == True):
+        ErrorMessage("output file already exists")
+        return
+    
+    #check if the input file is a video
 
-    print(inputExtension + " " + outputExtension)
+    command = [
+        
+        "ffmpeg",
+        "-i",
+        inputFile,
+        outputFile,
+        "-hide_banner"
+    ]
+    
+    print("going")
 
-    return os.system("ffmpeg -i " + inputFile + " "+ outputFile+ " -hide_banner")
+    process = subprocess.Popen(command,stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    return_code = process.wait()
+    print(return_code)
+    if return_code == 0:
+        print(stderr.decode())
+        stdout, stderr = process.communicate( input=b"y\n")
+        return_code = process.wait()
+        
+    print(return_code)
+
 
 def GetExtension(file: str):
     length = len(file)
@@ -52,3 +85,11 @@ def ReverseString(String: str):
 
     return output
 
+
+
+#write a test for the convert function
+def test_convert():
+    Convert("/home/wiffle/Downloads/rangler.mp4", "/home/wiffle/Downloads/rangler.mp3")
+
+
+test_convert()

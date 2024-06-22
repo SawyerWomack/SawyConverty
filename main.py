@@ -13,6 +13,7 @@ from VideoConversion import Convert
 from YoutubeDownload import Download
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog, QComboBox, QLabel, QHBoxLayout, QLineEdit, QTabWidget
 from PyQt5.QtGui import QMovie, QIcon
+from UIModules import create_to_box
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -45,7 +46,7 @@ class MainWindow(QMainWindow):
         self.label = QLabel('To (be sure to add the extension you want to change the file to at the end)')
         self.tab1_layout.addWidget(self.label)
 
-        toBox = self.create_to_box()
+        toBox = create_to_box(self)
         self.tab1_layout.addLayout(toBox)
 
         #--------Convert Widgets---------
@@ -123,20 +124,7 @@ class MainWindow(QMainWindow):
 
         return fromBox
     
-    def create_to_box(self):
-        toBox = QHBoxLayout()
 
-        # Button to open file dialog
-        self.ToFileButton = QPushButton("Select File")
-        self.ToFileButton.clicked.connect(self.open_file_dialog)
-        self.ToFileButton.setFixedSize(64, 64)
-        toBox.addWidget(self.ToFileButton)
-
-        # Textbox to display selected file path
-        self.toFilePath = QLineEdit()
-        toBox.addWidget(self.toFilePath)
-
-        return toBox
 
     def open_file_dialog(self):
         options = QFileDialog.Options()
@@ -179,3 +167,4 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
+
