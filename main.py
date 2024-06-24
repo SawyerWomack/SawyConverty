@@ -85,7 +85,7 @@ def FromBox():
     from_file_entry = ttk.Entry(from_box, textvariable=from_file_path)
     from_file_entry.pack(side='left', fill='x', expand=True)
 
-    from_box.pack(pady=5, padx=5)
+    from_box.pack(pady=5, fill='x')
 
 #a ui component that makes up all of the widgets needed to select what file you are converting to
 def ToBox():
@@ -106,9 +106,9 @@ def ToBox():
 
     #to display the path as well as make it editable 
     to_file_entry = ttk.Entry(to_box, textvariable=to_file_path)
-    to_file_entry.pack(side='left', fill='x', minx=200, expand=True)
+    to_file_entry.pack(side='left', fill='x', expand=True)
 
-    to_box.pack(pady=5)
+    to_box.pack(pady=5, fill='x')
 
 # Create the main application window
 app = tk.Tk()
@@ -136,9 +136,11 @@ FromBox()
 ToBox()
 
 
-# Convert Widgets
+#button to start conversion
 convert_button = ttk.Button(tab1, text="Convert", command=convert_file)
 convert_button.pack(pady=5)
+
+#bar to view progress
 progress = tk.DoubleVar(app)
 convert_progress = ttk.Progressbar(tab1,variable=progress)
 convert_progress.pack(pady=5)
