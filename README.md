@@ -20,3 +20,17 @@ Use pip to install:
 - pathlib
 
 After this, download the src file and extract it. After that simply run main.py and youre good to go!
+
+# How To Use
+Most of the use is pretty intuitive but I will describe anyway.
+
+## youtube download
+Say you wanted to download a youtube video with this url:https://www.youtube.com/watch?v=HInd4QQrgKI
+
+The first step would be to click on the tab at the top of the window that sats youtube download. Then select a download location. Note that if you leave that part blank, it will try to guess where your download folder is.
+After that just click the download button and wait for it to download
+
+## File Conversion
+Say you wanted to convert that video that is on you desktop.
+You would click on the button next to the from label and select the file, for example "/home/user/Desktop/video.mp4"
+it will automagically but this path into the to input box where you simply change the extension the the format you want to use. Finally just hit the convert button and wait
