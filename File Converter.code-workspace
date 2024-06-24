@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../Downloads/Forest-ttk-theme-master/forest-dark"
+		}
+	],
+	"settings": {
+		"codium.codeCompletion.enable": true
+	}
+}
