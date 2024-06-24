@@ -3,8 +3,7 @@ import os
 import sys
 from SupportedFileTypes import *
 from ffmpeg_progress import start
-import tkinter as tk
-from tkinter import ttk
+from tkinter import messagebox
 
 #Uses ffmpeg to convert between video formats
 call = None
@@ -34,22 +33,25 @@ def Convert(inputFile, outputFile,callback):
 
     #check if input file extension is good
     if(SupportedFileTypes.count(inputExtension) == 0):
-        return
+        messagebox.showerror("Error", "Unsupported input file")
+        return 1
 
     #check if output file extension is good
     if(SupportedFileTypes.count(outputExtension) == 0):
-        print("output no good")
+        messagebox.showerror("Error", "Unsupported output file")
         return
     #check if they do not have the same file extension
     if(inputExtension == outputExtension):
-        return
+        messagebox.showerror("Error", "Change the output extnesion to the desired format")
+        return 1 
     
     if(os.path.isfile(inputFile) == False):
-        return
+        messagebox.showerror("Error", "input file does not exist")
+        return 1
     
     if(os.path.isfile(outputFile) == True):
-
-        return
+        messagebox.showerror("Error", "output file already exists")
+        return 1
     
     start(inputFile,
       outputFile,
@@ -57,7 +59,7 @@ def Convert(inputFile, outputFile,callback):
       on_message=on_message_handler,
       on_done=lambda: print('Done!'),
       wait_time=0.1)
-    
+    return 0
 
 
 

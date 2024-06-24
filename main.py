@@ -1,5 +1,3 @@
-import sys
-import os 
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from SupportedFileTypes import *
@@ -24,6 +22,10 @@ def to_open_file_dialog():
     file_name = filedialog.askopenfilename(title="Select file", filetypes=(("All files", "*.*"), ("Python files", "*.py")))
     if file_name:
         to_file_path.set(file_name)
+def download_file_dialog():
+    file_name = filedialog.askopenfilename(title="Select file", filetypes=(("All files", "*.*"), ("Python files", "*.py")))
+    if file_name:
+        link_input.set(file_name)
 
 #the function that gets called when the convert button gets called
 def convert_file():
@@ -36,21 +38,22 @@ def convert_file():
     try:
         app.update_idletasks()
         #creates a new thread to run the convert function on
+        convert_result = []
+
         thread = Thread(target=Convert(input_file, output_file,convert_callback))
         thread.start()
         thread.join()
 
         #feedback for the user (Mabey add confeti?)
         convert_button.config(text="Converted!")
-        messagebox.showinfo("Success", "File converted successfully!")
     except Exception as e:
         convert_button.config(text="Convert")
         messagebox.showerror("Error", f"Conversion failed: {e}")
 
 #a function to feed the convert progress bar with data
 def convert_callback(value):
-    global progress 
-    progress.set(value)
+    global convert_progress_value
+    convert_progress_value.set(value)
     app.update_idletasks()
 
 #function called when the download button is hit
@@ -58,11 +61,15 @@ def download_video():
     link = link_input.get()
     location = download_location.get()
     try:
-        Download(link, location)
+        Download(link, location,download_callback)
         messagebox.showinfo("Success", "Video downloaded successfully!")
     except Exception as e:
         messagebox.showerror("Error", f"Download failed: {e}")
-
+def download_callback(stream, chunk, bytes_remaining):
+    value = round((1-bytes_remaining/stream.filesize)*100, 3)
+    global download_progress_value
+    download_progress_value.set(value)
+    app.update_idletasks()
 
 #-------- UI Components-----------
 
@@ -110,6 +117,47 @@ def ToBox():
 
     to_box.pack(pady=5, fill='x')
 
+def LinkBox():
+    link_box = ttk.Frame(tab2)
+
+
+    #labels the box
+    link_label = ttk.Label(link_box, text="Type link of video to download:")
+    link_label.pack(pady=5)
+
+    #text field
+    global link_input
+    link_input = tk.StringVar()
+    link_entry = ttk.Entry(link_box, textvariable=link_input)
+    link_entry.pack(pady=5, fill='x')
+
+    link_box.pack(pady=5, fill='x')
+
+def DownloadBox():
+    download_box = ttk.Frame(tab2)
+
+    download_label = ttk.Label(download_box, text="Where should the file download to:")
+    download_label.pack(pady=5)
+
+    download_location_button = tk.Button(download_box, text="Select File", command=download_file_dialog)
+    download_location_button.pack(side='left')
+
+    global download_location
+    download_location = tk.StringVar()
+    download_location_entry = ttk.Entry(download_box, textvariable=download_location)
+    download_location_entry.pack(pady=5, fill='x')
+
+    download_box.pack(pady=5, fill='x')
+
+    # Download button
+    download_button = ttk.Button(tab2, text="Download", command=download_video)
+    download_button.pack(pady=5)
+
+    download_progress = ttk.Progressbar(tab2,variable=download_progress_value)
+    download_progress.pack()
+
+
+
 # Create the main application window
 app = tk.Tk()
 app.title("File Converter")
@@ -141,8 +189,8 @@ convert_button = ttk.Button(tab1, text="Convert", command=convert_file)
 convert_button.pack(pady=5)
 
 #bar to view progress
-progress = tk.DoubleVar(app)
-convert_progress = ttk.Progressbar(tab1,variable=progress)
+convert_progress_value = tk.DoubleVar(app)
+convert_progress = ttk.Progressbar(tab1,variable=convert_progress_value)
 convert_progress.pack(pady=5)
 
 #-------- YouTube Download Tab-------------
@@ -150,24 +198,12 @@ tab2 = ttk.Frame(notebook)
 notebook.add(tab2, text="YouTube Download")
 
 # Link input
-link_label = ttk.Label(tab2, text="Type link of video to download:")
-link_label.pack(pady=5)
-
-link_input = tk.StringVar()
-link_entry = ttk.Entry(tab2, textvariable=link_input)
-link_entry.pack(pady=5, fill='x')
+LinkBox()
 
 # Download location input
-download_label = ttk.Label(tab2, text="Where should the file download to:")
-download_label.pack(pady=5)
 
-download_location = tk.StringVar()
-download_location_entry = ttk.Entry(tab2, textvariable=download_location)
-download_location_entry.pack(pady=5, fill='x')
-
-# Download button
-download_button = ttk.Button(tab2, text="Download", command=download_video)
-download_button.pack(pady=5)
+download_progress_value = tk.DoubleVar(app)
+DownloadBox()
 
 # Run the application
 app.mainloop()
