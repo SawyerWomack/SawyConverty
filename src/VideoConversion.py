@@ -1,6 +1,5 @@
 import subprocess as sp
 import os
-import sys
 from SupportedFileTypes import *
 from ffmpeg_progress import start
 from tkinter import messagebox
