@@ -4,7 +4,13 @@ I created this tool to avoid those horrible websites that make you download malw
 This tool solves both of these problems by creating a simple and intewitive way to download youtube videos and convert between different media file types
 
 # Installation
-While I work on creating a installer, this is how you download and run the program
+If you are on  a debian based system, simply download the .deb file and install it using
+```
+sudo dpkg -i SawyConverty.deb
+```
+
+
+While I work on creating a windows installer, this is how you download and run the program
 First make sure you have all of the python packages that are listed below
 
 Probably already installed:
